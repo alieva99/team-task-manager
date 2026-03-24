@@ -25,8 +25,8 @@ app.add_middleware(
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:5173",
- "https://team-task-manager-app.onrender.com",  # URL фронтенда
-        "https://team-task-manager-api.onrender.com",   # URL бэкенда
+        "https://team-task-manager-api-wk16.onrender.com",
+        "https://team-task-manager-app1.onrender.com",   # ← добавьте эту строку!
     ],
     allow_credentials=True,
     allow_methods=["*"],
