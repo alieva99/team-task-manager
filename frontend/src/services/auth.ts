@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api/v1';
+const API_URL = 'https://team-task-manager-api-wk16.onrender.com/api/v1';
 
 interface LoginData {
   username: string;  // email
