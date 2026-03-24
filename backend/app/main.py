@@ -19,15 +19,22 @@ app = FastAPI(
 )
 
 # Set up CORS - исправленная версия
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=[
+#         "http://localhost:3000",
+#         "http://127.0.0.1:3000",
+#         "http://localhost:5173",
+#         "https://team-task-manager-api-wk16.onrender.com",
+#         "https://team-task-manager-app1.onrender.com",   # ← добавьте эту строку!
+#     ],
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:5173",
-        "https://team-task-manager-api-wk16.onrender.com",
-        "https://team-task-manager-app1.onrender.com",   # ← добавьте эту строку!
-    ],
+    allow_origins=["*"],  # временно разрешаем все источники
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
