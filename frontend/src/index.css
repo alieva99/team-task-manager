@@ -1,0 +1,120 @@
+/* Глобальные стили */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Кастомные скроллбары в стиле DeepSeek */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+  /* Уменьшаем размеры карточек */
+  .MuiCard-root {
+    border-radius: 12px !important;
+  }
+  
+  /* Улучшаем тач-цели */
+  .MuiButton-root,
+  .MuiIconButton-root {
+    min-height: 40px !important;
+  }
+  
+  /* Уменьшаем отступы */
+  .MuiContainer-root {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  
+  /* Адаптируем таблицы */
+  .MuiTableCell-root {
+    padding: 6px 4px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Упрощаем отображение в месяц */
+  .MuiPaper-root {
+    border-radius: 8px !important;
+  }
+}
+
+/* Планшеты */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .MuiTableCell-root {
+    padding: 8px 6px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+
+
+/* Плавные переходы */
+.MuiButton-root,
+.MuiIconButton-root,
+.MuiCard-root {
+  transition: all 0.2s ease-in-out !important;
+}
+
+.MuiButton-root:hover,
+.MuiIconButton-root:hover {
+  transform: translateY(-1px);
+}
+
+/* Улучшение для touch-устройств */
+@media (hover: none) and (pointer: coarse) {
+  /* Увеличиваем зону касания */
+  .MuiIconButton-root {
+    padding: 12px !important;
+  }
+  
+  /* Убираем эффект наведения на мобильных */
+  .MuiButton-root:hover {
+    transform: none !important;
+  }
+  
+  /* Добавляем активное состояние */
+  .MuiButton-root:active {
+    transform: scale(0.98) !important;
+  }
+}
+
+/* Анимация для загрузки */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.loading-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}

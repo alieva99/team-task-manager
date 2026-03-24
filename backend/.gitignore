@@ -1,0 +1,56 @@
+# Зависимости
+node_modules/
+.env
+.env.local
+.env.development
+.env.production
+
+# Логи
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Сборка
+dist/
+build/
+.next/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Docker
+.dockerignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Alembic (миграции, но сами миграции нужно хранить)
+alembic/versions/*.pyc
+
+# База данных (на всякий случай, даже если вы не используете SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# Переменные окружения (ВАЖНО!)
+.env
+.env.*
+!.env.example
