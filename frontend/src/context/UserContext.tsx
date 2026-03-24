@@ -43,7 +43,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
-      const response = await axios.get('http://localhost:8000/api/v1/users/me', {
+      const response = await axios.get('https://team-task-manager-api-wk16.onrender.com/api/v1/users/me', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(response.data);
