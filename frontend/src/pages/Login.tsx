@@ -85,9 +85,9 @@ const Login = () => {
       localStorage.setItem('token', response.data.access_token);
       localStorage.setItem('token_type', response.data.token_type);
       
-const userResponse = await axios.get('https://team-task-manager-api-wk16.onrender.com/api/v1/users/me', {
-    headers: { Authorization: `Bearer ${response.data.access_token}` }
-});
+      const userResponse = await axios.get('https://team-task-manager-api-wk16.onrender.com/api/v1/users/me', {
+        headers: { Authorization: `Bearer ${response.data.access_token}` }
+      });
       
       localStorage.setItem('user', JSON.stringify(userResponse.data));
       
