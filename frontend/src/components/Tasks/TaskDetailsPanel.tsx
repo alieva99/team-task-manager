@@ -812,24 +812,57 @@ const handleDeleteTask = async () => {
               </Typography>
               
               <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-                <TextField
-                  label="Часы"
-                  type="number"
-                  value={estimatedHours}
-                  onChange={(e) => setEstimatedHours(Math.max(0, parseInt(e.target.value) || 0))}
-                  inputProps={{ min: 0, max: 999 , readOnly: true}}
-                  fullWidth
-                  size="small"
-                />
-                <TextField
-                  label="Минуты"
-                  type="number"
-                  value={estimatedMinutes}
-                  onChange={(e) => setEstimatedMinutes(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))}
-                  inputProps={{ min: 0, max: 59 , readOnly: true}}
-                  fullWidth
-                  size="small"
-                />
+<TextField
+  label="Часы"
+  type="number"
+  value={estimatedHours}
+  onChange={(e) => {
+    const val = parseInt(e.target.value);
+    if (!isNaN(val) && val >= 0 && val <= 999) {
+      setEstimatedHours(val);
+    }
+  }}
+  inputProps={{ 
+    min: 0, 
+    max: 999,
+    step: 1,
+    // Убираем readOnly, чтобы стрелочки работали
+  }}
+  // Запрещаем ввод с клавиатуры, но оставляем стрелочки
+  onKeyDown={(e) => {
+    // Разрешаем только стрелочки вверх/вниз, Backspace, Delete
+    const allowedKeys = ['ArrowUp', 'ArrowDown', 'Backspace', 'Delete', 'Tab'];
+    if (!allowedKeys.includes(e.key) && !/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
+    }
+  }}
+  fullWidth
+  size="small"
+/>
+<TextField
+  label="Минуты"
+  type="number"
+  value={estimatedMinutes}
+  onChange={(e) => {
+    const val = parseInt(e.target.value);
+    if (!isNaN(val) && val >= 0 && val <= 59) {
+      setEstimatedMinutes(val);
+    }
+  }}
+  inputProps={{ 
+    min: 0, 
+    max: 59,
+    step: 1,
+  }}
+  onKeyDown={(e) => {
+    const allowedKeys = ['ArrowUp', 'ArrowDown', 'Backspace', 'Delete', 'Tab'];
+    if (!allowedKeys.includes(e.key) && !/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
+    }
+  }}
+  fullWidth
+  size="small"
+/>
               </Stack>
 
               <Stack direction="row" spacing={1} sx={{ mt: 2 }}>

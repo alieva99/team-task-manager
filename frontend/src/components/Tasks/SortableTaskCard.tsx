@@ -69,7 +69,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({
   if (deadlineDate < now) {
     const diffTime = Math.abs(now.getTime() - deadlineDate.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return { days: diffDays, text: `просрочена на ${diffDays} дн.` };
+    return { days: diffDays, text: `${diffDays} дн.` };
   }
   return null;
 };
