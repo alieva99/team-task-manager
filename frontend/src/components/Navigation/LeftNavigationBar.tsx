@@ -28,8 +28,6 @@ import {
   useMediaQuery,
   useTheme,
   Badge,
-  AppBar,
-  Toolbar,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -49,7 +47,7 @@ import {
   Notifications as NotificationsIcon,
 } from '@mui/icons-material';
 import { useUser } from '../../context/UserContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { projectsApi, notificationsApi } from '../../services/api';
 import * as Icons from '@mui/icons-material';
 import InviteUserDialog from './InviteUserDialog';
@@ -80,7 +78,6 @@ const availableAvatars = [
 const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const location = useLocation();
   const { user, updateUser, refreshUser } = useUser();
   const navigate = useNavigate();
   
@@ -185,7 +182,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
       
       setTimeout(() => {
         navigate(`/project/${response.data.project_id}`);
-        if (isMobile) onToggle(); // Закрываем панель на мобильных
+        if (isMobile) onToggle();
       }, 1000);
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Ошибка при создании проекта');
@@ -349,7 +346,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
 
   const handleInviteClick = () => {
     setInviteDialogOpen(true);
-    if (isMobile) onToggle(); // Закрываем панель на мобильных
+    if (isMobile) onToggle();
   };
 
   const handleInviteSuccess = (message: string) => {
@@ -359,7 +356,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
 
   const handleProjectClick = (projectId: number) => {
     navigate(`/project/${projectId}`);
-    if (isMobile) onToggle(); // Закрываем панель на мобильных после выбора проекта
+    if (isMobile) onToggle();
   };
 
   if (!user) {
@@ -591,7 +588,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
       
       <Divider />
       
-      {/* Профиль */}
+      {/* Нижняя часть - профиль */}
       <Box 
         sx={{ 
           p: open ? 2 : 1,
