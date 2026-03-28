@@ -12,6 +12,7 @@ import {
   TextField,
   Button,
   Alert,
+  Chip,
 } from '@mui/material';
 import {
   MoreVert as MoreVertIcon,
@@ -107,19 +108,39 @@ const ColumnHeader: React.FC<ColumnHeaderProps> = ({
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h6">
-          {column.column_name} ({taskCount})
-        </Typography>
-        <Box>
-          <IconButton size="small" onClick={onAddTask}>
-            <AddIcon />
-          </IconButton>
+      {/* Первый прямоугольник: заголовок колонки с меню */}
+      <Box sx={{ mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6">
+            {column.column_name} ({taskCount})
+          </Typography>
           <IconButton size="small" onClick={handleMenuOpen}>
             <MoreVertIcon />
           </IconButton>
         </Box>
       </Box>
+
+      {/* Второй прямоугольник: кнопка добавления задачи */}
+      <Button
+        variant="outlined"
+        startIcon={<AddIcon />}
+        onClick={onAddTask}
+        fullWidth
+        sx={{
+          mb: 2,
+          justifyContent: 'flex-start',
+          borderStyle: 'dashed',
+          color: 'text.secondary',
+          borderColor: 'divider',
+          '&:hover': {
+            borderColor: 'primary.main',
+            color: 'primary.main',
+            backgroundColor: 'rgba(25, 118, 210, 0.04)',
+          },
+        }}
+      >
+        + добавить задачу
+      </Button>
 
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
         <MenuItem onClick={handleEditClick}>

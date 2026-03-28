@@ -14,6 +14,7 @@ import {
   CheckCircle as CheckCircleIcon,
   RadioButtonUnchecked as RadioButtonUncheckedIcon,
   CalendarToday as CalendarIcon,
+  Error as ErrorIcon, 
 } from '@mui/icons-material';
 
 interface ProjectFiltersProps {
@@ -178,6 +179,12 @@ const ProjectFilters: React.FC<ProjectFiltersProps> = ({
               <span>Активные</span>
             </Box>
           </MenuItem>
+          <MenuItem value="overdue">  {/* НОВЫЙ ПУНКТ */}
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <ErrorIcon sx={{ color: '#f44336' }} />
+      <span>Просроченные</span>
+    </Box>
+  </MenuItem>
         </Select>
       </FormControl>
 
@@ -205,6 +212,13 @@ const ProjectFilters: React.FC<ProjectFiltersProps> = ({
               onDelete={() => onStatusFilterChange('all')}
             />
           )}
+          {statusFilter === 'overdue' && (
+  <Chip
+    label="Просроченные"
+    size="small"
+    onDelete={() => onStatusFilterChange('all')}
+  />
+)}
         </Box>
       )}
     </Paper>

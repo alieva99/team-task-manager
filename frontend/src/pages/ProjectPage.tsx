@@ -257,6 +257,15 @@ const ProjectPage: React.FC = () => {
       }
     }
 
+    if (statusFilter === 'overdue') {
+  const now = new Date();
+  filtered = filtered.filter(task => {
+    if (!task.deadline || task.is_completed) return false;
+    const deadlineDate = new Date(task.deadline);
+    return deadlineDate < now;
+  });
+}
+
     setFilteredTasks(filtered);
   };
 

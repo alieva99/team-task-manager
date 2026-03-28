@@ -62,6 +62,18 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({
     fetchSubtasks();
   }, [task.task_id]);
 
+  const getOverdueStatus = (task: Task) => {
+  if (!task.deadline || task.is_completed) return null;
+  const now = new Date();
+  const deadlineDate = new Date(task.deadline);
+  if (deadlineDate < now) {
+    const diffTime = Math.abs(now.getTime() - deadlineDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return { days: diffDays, text: `просрочена на ${diffDays} дн.` };
+  }
+  return null;
+};
+
   const fetchSubtasks = async () => {
     setSubtasksLoading(true);
     try {
@@ -111,6 +123,20 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({
           {/* Основная задача */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <DragHandleIcon sx={{ color: 'text.secondary', fontSize: 18, cursor: 'grab' }} />
+            {getOverdueStatus(task) && (
+  <Chip
+    label={getOverdueStatus(task)?.text}
+    size="small"
+    color="error"
+    sx={{
+      height: 20,
+      '& .MuiChip-label': { fontSize: '0.65rem', px: 1 },
+      backgroundColor: '#f44336',
+      color: 'white',
+      fontWeight: 'bold',
+    }}
+  />
+)}
             <Typography
               variant="body2"
               sx={{

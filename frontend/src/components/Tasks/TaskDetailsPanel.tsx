@@ -739,13 +739,13 @@ const handleDeleteTask = async () => {
                 label="Дата"
                 value={deadlineDate}
                 onChange={setDeadlineDate}
-                slotProps={{ textField: { fullWidth: true, margin: 'normal' } }}
+                slotProps={{ textField: { fullWidth: true, margin: 'normal' , inputProps: { readOnly: true }} }}
               />
               <TimePicker
                 label="Время"
                 value={deadlineTime}
                 onChange={setDeadlineTime}
-                slotProps={{ textField: { fullWidth: true, margin: 'normal' } }}
+                slotProps={{ textField: { fullWidth: true, margin: 'normal', inputProps: { readOnly: true } } }}
               />
               <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
                 <Button 
@@ -817,7 +817,7 @@ const handleDeleteTask = async () => {
                   type="number"
                   value={estimatedHours}
                   onChange={(e) => setEstimatedHours(Math.max(0, parseInt(e.target.value) || 0))}
-                  inputProps={{ min: 0, max: 999 }}
+                  inputProps={{ min: 0, max: 999 , readOnly: true}}
                   fullWidth
                   size="small"
                 />
@@ -826,7 +826,7 @@ const handleDeleteTask = async () => {
                   type="number"
                   value={estimatedMinutes}
                   onChange={(e) => setEstimatedMinutes(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))}
-                  inputProps={{ min: 0, max: 59 }}
+                  inputProps={{ min: 0, max: 59 , readOnly: true}}
                   fullWidth
                   size="small"
                 />
