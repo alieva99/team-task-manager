@@ -28,6 +28,8 @@ import {
   useMediaQuery,
   useTheme,
   Badge,
+  AppBar,
+  Toolbar,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -44,9 +46,10 @@ import {
   MoreVert as MoreVertIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  Notifications as NotificationsIcon,
 } from '@mui/icons-material';
 import { useUser } from '../../context/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { projectsApi, notificationsApi } from '../../services/api';
 import * as Icons from '@mui/icons-material';
 import InviteUserDialog from './InviteUserDialog';
@@ -77,10 +80,11 @@ const availableAvatars = [
 const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const location = useLocation();
   const { user, updateUser, refreshUser } = useUser();
   const navigate = useNavigate();
   
-  // ... все состояния остаются теми же ...
+  // Состояния
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [solutionName, setSolutionName] = useState('');
   const [solutionIcon, setSolutionIcon] = useState('');
@@ -104,6 +108,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
   const [success, setSuccess] = useState('');
   const [saving, setSaving] = useState(false);
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
   // Загрузка проектов
@@ -158,8 +163,6 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
     }
   };
 
-  // ... остальные функции (handleCreateProject, handleEditProject и т.д.) ...
-
   const handleCreateProject = async () => {
     if (!newProjectName.trim()) {
       setError('Название проекта не может быть пустым');
@@ -182,6 +185,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
       
       setTimeout(() => {
         navigate(`/project/${response.data.project_id}`);
+        if (isMobile) onToggle(); // Закрываем панель на мобильных
       }, 1000);
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Ошибка при создании проекта');
@@ -345,6 +349,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
 
   const handleInviteClick = () => {
     setInviteDialogOpen(true);
+    if (isMobile) onToggle(); // Закрываем панель на мобильных
   };
 
   const handleInviteSuccess = (message: string) => {
@@ -352,11 +357,17 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
     setTimeout(() => setSuccess(''), 3000);
   };
 
+  const handleProjectClick = (projectId: number) => {
+    navigate(`/project/${projectId}`);
+    if (isMobile) onToggle(); // Закрываем панель на мобильных после выбора проекта
+  };
+
   if (!user) {
     return (
       <Drawer
-        variant="permanent"
+        variant={isMobile ? 'temporary' : 'permanent'}
         open={open}
+        onClose={onToggle}
         sx={{
           width: open ? { xs: 240, md: 280 } : { xs: 56, md: 72 },
           flexShrink: 0,
@@ -411,6 +422,16 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
                 </Typography>
               </Box>
               
+              {/* Иконка уведомлений */}
+              <IconButton 
+                color="primary" 
+                onClick={() => setNotificationsOpen(true)}
+                size="small"
+              >
+                <Badge badgeContent={unreadCount} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
             </Box>
             <IconButton onClick={onToggle} size="small">
               <ChevronLeftIcon />
@@ -420,6 +441,11 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
             <IconButton onClick={() => setSettingsOpen(true)} sx={{ mb: 1 }}>
               <IconComponent sx={{ color: 'primary.main' }} />
+            </IconButton>
+            <IconButton onClick={() => setNotificationsOpen(true)} sx={{ mb: 1 }}>
+              <Badge badgeContent={unreadCount} color="error" variant="dot">
+                <NotificationsIcon />
+              </Badge>
             </IconButton>
             <IconButton onClick={onToggle}>
               <MenuIcon />
@@ -546,7 +572,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
                 }
               >
                 <ListItemButton 
-                  onClick={() => navigate(`/project/${project.project_id}`)}
+                  onClick={() => handleProjectClick(project.project_id)}
                   sx={{ borderRadius: 2 }}
                 >
                   <ListItemText 
@@ -566,44 +592,61 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
       <Divider />
       
       {/* Профиль */}
-      {/* Нижняя часть - профиль (кликабельно) */}
-{/* Нижняя часть - профиль (кликабельно) */}
-<Box 
-  sx={{ 
-    p: open ? 2 : 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: open ? 'flex-start' : 'center',
-    gap: 1,
-    cursor: 'pointer',
-    '&:hover': { bgcolor: 'rgba(0,0,0,0.04)' }
-  }}
-  onClick={() => setProfileOpen(true)}
->
-  <Avatar 
-    src="/images/avatar.jpg"
-    sx={{ 
-      width: 40, 
-      height: 40,
-      bgcolor: 'primary.main',
-    }}
-  />
-  {open && (
-    <Box>
-      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-        {user?.user_name}
-      </Typography>
-      <Typography variant="caption" color="text.secondary">
-        {user?.email}
-      </Typography>
-    </Box>
-  )}
-</Box>
+      <Box 
+        sx={{ 
+          p: open ? 2 : 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: open ? 'flex-start' : 'center',
+          gap: 1,
+          cursor: 'pointer',
+          '&:hover': { bgcolor: 'rgba(0,0,0,0.04)' }
+        }}
+        onClick={() => setProfileOpen(true)}
+      >
+        <Avatar 
+          sx={{ 
+            width: 40, 
+            height: 40,
+            bgcolor: 'primary.main',
+          }}
+        >
+          <UserAvatarIcon />
+        </Avatar>
+        {open && (
+          <Box>
+            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+              {user?.user_name}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {user?.email}
+            </Typography>
+          </Box>
+        )}
+      </Box>
     </>
   );
 
   return (
     <>
+      {/* Мобильная кнопка-гамбургер */}
+      {isMobile && !open && (
+        <IconButton
+          onClick={onToggle}
+          sx={{
+            position: 'fixed',
+            top: 12,
+            left: 12,
+            zIndex: 1200,
+            backgroundColor: 'background.paper',
+            boxShadow: 1,
+            '&:hover': { backgroundColor: 'background.paper' },
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
+      )}
+
       <Drawer
         variant={isMobile ? 'temporary' : 'permanent'}
         open={open}
@@ -625,7 +668,8 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
         {drawerContent}
       </Drawer>
 
-      {/* Все диалоги остаются такими же */}
+
+      {/* Меню проекта */}
       <Menu
         anchorEl={projectMenuAnchor}
         open={Boolean(projectMenuAnchor)}
@@ -641,6 +685,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
         </MenuItem>
       </Menu>
 
+      {/* Диалог настроек решения */}
       <Dialog open={settingsOpen} onClose={() => !saving && setSettingsOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Настройки решения</DialogTitle>
         <DialogContent>
@@ -655,27 +700,6 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
             margin="normal"
             disabled={saving}
           />
-          
-          {/* <FormControl fullWidth margin="normal" disabled={saving}>
-            <InputLabel>Иконка</InputLabel>
-            <Select
-              value={solutionIcon}
-              onChange={(e) => setSolutionIcon(e.target.value)}
-              label="Иконка"
-            >
-              {availableIcons.map((iconName) => {
-                const Icon = Icons[iconName as keyof typeof Icons];
-                return (
-                  <MenuItem key={iconName} value={iconName}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Icon fontSize="small" />
-                      <span>{iconName}</span>
-                    </Box>
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSettingsOpen(false)} disabled={saving}>
@@ -687,6 +711,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
         </DialogActions>
       </Dialog>
 
+      {/* Диалог личного кабинета */}
       <Dialog open={profileOpen} onClose={() => !saving && setProfileOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -720,8 +745,6 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
               startAdornment: <PersonIcon sx={{ mr: 1, color: 'text.secondary' }} />,
             }}
           />
-          
-
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
           <Button 
@@ -743,6 +766,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
         </DialogActions>
       </Dialog>
 
+      {/* Диалог создания проекта */}
       <Dialog open={createProjectOpen} onClose={() => !saving && setCreateProjectOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Создание нового проекта</DialogTitle>
         <DialogContent>
@@ -770,6 +794,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
         </DialogActions>
       </Dialog>
 
+      {/* Диалог редактирования проекта */}
       <Dialog open={editProjectOpen} onClose={() => !saving && setEditProjectOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Редактирование проекта</DialogTitle>
         <DialogContent>
@@ -796,6 +821,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
         </DialogActions>
       </Dialog>
 
+      {/* Диалог подтверждения удаления */}
       <Dialog open={deleteDialogOpen} onClose={() => !saving && setDeleteDialogOpen(false)}>
         <DialogTitle>Удаление проекта</DialogTitle>
         <DialogContent>
@@ -816,6 +842,7 @@ const LeftNavigationBar: React.FC<LeftNavigationBarProps> = ({ open, onToggle })
         </DialogActions>
       </Dialog>
 
+      {/* Диалог приглашения пользователя */}
       <InviteUserDialog
         open={inviteDialogOpen}
         onClose={() => setInviteDialogOpen(false)}
